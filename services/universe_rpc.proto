@@ -1,0 +1,39 @@
+syntax = "proto3";
+option go_package = ".;universe_rpc";
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  //rpc SayHello (HelloRequest) returns (HelloReply) {}
+  // Sends another greeting
+  rpc GetBodyPosition (BodyName) returns (BodyPos) {}
+
+  rpc SolarSystemPositions (BodyName) returns (AllBodies) {}
+
+  rpc RequestSolarSystemStats(BodyName) returns (SolarSystemStats){}
+
+}
+
+message SolarSystemStats {
+
+  double age = 1;
+}
+
+// The request message containing the user's name.
+message BodyName {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message BodyPos {
+  double x = 1;
+  double y = 2;
+}
+
+
+message AllBodies {
+    map<string, BodyPos> Bodies = 1;
+}
+
+
+message NoInput{}
