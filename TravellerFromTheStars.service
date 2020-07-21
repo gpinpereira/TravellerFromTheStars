@@ -1,0 +1,13 @@
+[Unit]
+Description=Service for TravellerFromTheStars
+After=network.target
+
+[Service]
+User=guilherme
+Group=sudo
+WorkingDirectory=/home/guilherme/Documents/TravellerFromTheStars
+ExecStart=/home/guilherme/Documents/TravellerFromTheStars/TFtSmain
+
+[Install]
+WantedBy=multi-user.target
+

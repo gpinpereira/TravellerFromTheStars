@@ -15,11 +15,14 @@ import (
 //import "fmt"
 
 type Astro struct {
-	Name                       string
-	Age                        int
-	is_sun                     bool
-	x, y, vx, vy, mass, radius float64
-	system                     SolarSystem
+	Name                             string
+	Age                              int
+	is_sun                           bool
+	is_ship                          bool
+	x, y, vx, vy, mass, radius       float64
+	next_x, next_y, next_vx, next_vy float64
+	center_body                      string
+	system                           SolarSystem
 }
 
 type SolarSystem struct {
@@ -47,25 +50,34 @@ func (sys *SolarSystem) GetAge() float64 {
 
 type AstroNextPosition interface {
 	rk4()
+	nextStep()
 }
 
-func (astro *Astro) GetPos() (float64, float64) {
-	return astro.x, astro.y
+func (astro *Astro) GetStats() (float64, float64, float64, float64, float64) {
+	return astro.x, astro.y, astro.vx, astro.vy, astro.mass
 
 }
 
 func (astro *Astro) calc_acel(x float64, y float64) (float64, float64) {
-	otherbodies := astro.system.bodies
+	otherbodies := astro.system.GetBodies()
+
+	//body := otherbodies[astro.center_body]
 	ax := 0.0
 	ay := 0.0
+
 	var G float64 = 6.67408 * math.Pow10(-11)
+
+	///fmt.Println("!!!!!!!!!!!!!!!!!!!!")
+	//fmt.Println(astro.Name)
+	//fmt.Println(body.Name)
+	//fmt.Println(body.Name)
+
 	for _, body := range otherbodies {
-
-		//fmt.Println(body.Name)
-
 		if body.Name != astro.Name {
-			//for ax
-			//fmt.Println(astro.Name)
+			//if astro.Name == "Luna" {
+			//	fmt.Println(body.Name)
+			//}
+
 			var dx float64 = x - body.x
 			var dy float64 = body.y - astro.y
 			var dsq float64 = dx*dx + dy*dy
@@ -84,8 +96,8 @@ func (astro *Astro) calc_acel(x float64, y float64) (float64, float64) {
 
 			force = G * body.mass / dsq
 			ay += force * dy / dr
-		}
 
+		}
 	}
 	return -ax, -ay
 }
@@ -125,16 +137,31 @@ func (astro *Astro) rk4() {
 
 	//fmt.Println(l1x, l2x, l3x, l4x)
 	//fmt.Println(l1y, l2y, l3y, l4y)
-	astro.x += (l1x + 2*l2x + 2*l3x + l4x) / 6
-	astro.y += (l1y + 2*l2y + 2*l3y + l4y) / 6
+	astro.next_x = astro.x + (l1x+2*l2x+2*l3x+l4x)/6
+	astro.next_y = astro.y + (l1y+2*l2y+2*l3y+l4y)/6
 
-	astro.vx += (k1x + 2*k2x + 2*k3x + k4x) / 6
-	astro.vy += (k1y + 2*k2y + 2*k3y + k4y) / 6
+	astro.next_vx = astro.vx + (k1x+2*k2x+2*k3x+k4x)/6
+	astro.next_vy = astro.vy + (k1y+2*k2y+2*k3y+k4y)/6
+}
+
+func (astro *Astro) nextStep() {
+
+	astro.x = astro.next_x
+	astro.y = astro.next_y
+
+	astro.vx = astro.next_vx
+	astro.vy = astro.next_vy
 }
 
 func moveAstro(nextp AstroNextPosition) {
 
 	nextp.rk4()
+}
+
+func takeNextStep(nextp AstroNextPosition) {
+
+	nextp.nextStep()
+
 }
 
 func MakeSystemCSV() *SolarSystem {
@@ -147,7 +174,8 @@ func MakeSystemCSV() *SolarSystem {
 	// Parse the file
 	r := csv.NewReader(csvfile)
 	r.Comma = ';'
-	s := SolarSystem{Name: "Solar System", Age: 0, deltat: 60}
+	//dt=1
+	s := SolarSystem{Name: "Solar System", Age: 0, deltat: 1}
 	bodies := make(map[string]*Astro)
 
 	i := 0
@@ -173,20 +201,30 @@ func MakeSystemCSV() *SolarSystem {
 		vy := StringToFloat(record[5]) * 1000
 		//vz := StringToFloat(record[6])
 		mass := StringToFloat(record[7])
+		center_body := record[8]
 		//fmt.Println(name, x, y, vx, vy, mass)
 		if name == "Sun" {
-			bod := Astro{Name: name, Age: 0, x: x, y: y, vx: vx, vy: vy, mass: mass, is_sun: true}
+			bod := Astro{Name: name, Age: 0, x: x, y: y, vx: vx, vy: vy, mass: mass, is_sun: true, is_ship: false}
 			bod.system = s
 			bodies[name] = &bod
 
 		} else {
-			bod := Astro{Name: name, Age: 0, x: x, y: y, vx: vx, vy: vy, mass: mass, is_sun: false}
+			bod := Astro{Name: name, Age: 0, x: x, y: y, vx: vx, vy: vy, mass: mass, is_sun: false, is_ship: false, center_body: center_body}
 			bod.system = s
 			bodies[name] = &bod
 
 		}
 
+		if name == "Earth" {
+
+			bod := Astro{Name: "Ship", Age: 0, x: x * 0.99, y: y * 0.99, vx: vx, vy: vy, mass: 200, is_sun: false, is_ship: true, center_body: "Sun"}
+			bod.system = s
+			bodies["Ship"] = &bod
+
+		}
+
 	}
+
 	s.bodies = bodies
 
 	for i := range s.bodies {
@@ -241,20 +279,80 @@ func SimulateSystem(system *SolarSystem) {
 			}
 		}
 
+		for _, body := range this_system_bodies {
+
+			if !body.is_sun {
+				//fmt.Println(body)
+				takeNextStep(body)
+			}
+		}
+
 		system.Age = system.Age + system.deltat
 		time_tick += 1
-		//time.Sleep(1000000 * time.Nanosecond)
-		//time.Sleep(10000000 * time.Nanosecond)
-		//time.Sleep(100000000 * time.Nanosecond)
-		time.Sleep(1 * time.Nanosecond)
+
+		time.Sleep(2 * 6900 * time.Nanosecond) // for dt =1
+		//time.Sleep(2 * time.Nanosecond)
 
 	}
 
-	for _, body := range this_system_bodies {
+}
 
-		fmt.Printf("%v %v %v %v\n", body.x, body.y, body.vx, body.vy)
+func FastSimulation(system *SolarSystem, ship_name string) ([]float64, []float64) {
+
+	s := SolarSystem{Name: "Solar System", Age: 0, deltat: 500}
+
+	delta := 3600
+	limit := 3600 * 24 * 365
+	var x_hist []float64
+	var y_hist []float64
+	age := 0
+	this_system_bodies := system.bodies
+
+	new_system := make(map[string]*Astro)
+
+	for n, body := range this_system_bodies {
+		fmt.Println(body.Name)
+		var n_body Astro
+		n_body = *body
+		n_body.system = s
+		n_body.x = 0
+		new_system[n] = &n_body
 
 	}
+
+	s.bodies = new_system
+
+	fmt.Println("starting fast simulation")
+	for age < limit {
+
+		for _, body := range new_system {
+
+			if !body.is_sun {
+				//fmt.Println(body)
+				moveAstro(body)
+			}
+		}
+
+		for _, body := range new_system {
+
+			if !body.is_sun {
+				//fmt.Println(body.Name)
+				takeNextStep(body)
+
+				if body.Name == ship_name {
+					//fmt.Println(body)
+					x_hist = append(x_hist, body.x)
+					y_hist = append(y_hist, body.y)
+				}
+			}
+		}
+		age += delta
+	}
+
+	fmt.Println("fast simulation ended")
+	//fmt.Println(age)
+	//fmt.Println(x_hist)
+	return x_hist, y_hist
 
 }
 

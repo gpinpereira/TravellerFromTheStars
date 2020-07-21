@@ -9,6 +9,8 @@ service Greeter {
   rpc GetBodyPosition (BodyName) returns (BodyPos) {}
 
   rpc SolarSystemPositions (BodyName) returns (AllBodies) {}
+  
+  rpc MakeSolarSystemPrediction (BodyName) returns (AllBodies) {}
 
   rpc RequestSolarSystemStats(BodyName) returns (SolarSystemStats){}
 
@@ -28,6 +30,9 @@ message BodyName {
 message BodyPos {
   double x = 1;
   double y = 2;
+  double vx = 3;
+  double vy = 4;
+  double mass = 5;
 }
 
 

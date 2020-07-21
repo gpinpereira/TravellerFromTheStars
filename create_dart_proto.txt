@@ -1,0 +1,2 @@
+protoc -I protos/ protos/universe_rpc.proto --dart_out=grpc:protos/
+protoc -I ./ ./universe_rpc.proto --go_out=plugins=grpc:./
