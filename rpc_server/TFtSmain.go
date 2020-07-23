@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"strconv"
 
 	pb "../services"
 	"../universe"
@@ -67,21 +66,32 @@ func (s *server) SolarSystemPositions(ctx context.Context, in *pb.BodyName) (*pb
 	return &pb.AllBodies{Bodies: send_bodies}, nil
 }
 
-func (s *server) MakeSolarSystemPrediction(ctx context.Context, in *pb.BodyName) (*pb.AllBodies, error) {
-	//fmt.Println(in.Name)
+func (s *server) MakeSolarSystemPrediction(ctx context.Context, in *pb.MyState) (*pb.AllBodies, error) {
+
+	fmt.Println(in.Myname)
+	//fmt.Println(allbodies)
+	//&system.Name = "Solar System" //universe.SolarSystem{Name: "Solar System", Age: 0, deltat: 500}
+	/*for name, body := range allbodies {
+		fmt.Println(name)
+		fmt.Println(body)
+	}*/
+
 	//allbodies := main_solar_system.GetBodies()
 
-	hist_x, hist_y := universe.FastSimulation(main_solar_system, in.Name)
-	//fmt.Println(hist_x)
-	//fmt.Println(hist_y)
-	send_bodies := make(map[string]*pb.BodyPos)
+	hist_x, hist_y := universe.FastSimulation(in)
+	fmt.Println(hist_x)
+	fmt.Println(hist_y)
 
-	for i := 0; i < len(hist_x); i++ {
-		t := strconv.Itoa(i)
-		send_bodies[t] = &pb.BodyPos{X: hist_x[i], Y: hist_y[i]}
-	}
+	/*send_bodies := make(map[string]*pb.BodyPos)
+	bodies := make(map[string]universe.Astro)
+	for name, body := range allbodies {
+		bod := universe.Astro{Name: name, Age: 0, x: body.X, y: body.Y, vx: body.Vx, vy: body.Vy, mass: body.Mass, is_sun: false, is_ship: false}
+		//send_bodies[name] = &pb.BodyPos{X:, Y: body.X, Vx: body.Vx, Vy: body.Vy, Mass: body.mass}
 
-	return &pb.AllBodies{Bodies: send_bodies}, nil
+	}*/
+
+	//return &pb.AllBodies{Bodies: send_bodies}, nil
+	return in.Otherbodies, nil
 }
 
 func (s *server) RequestSolarSystemStats(ctx context.Context, in *pb.BodyName) (*pb.SolarSystemStats, error) {

@@ -10,7 +10,7 @@ service Greeter {
 
   rpc SolarSystemPositions (BodyName) returns (AllBodies) {}
   
-  rpc MakeSolarSystemPrediction (BodyName) returns (AllBodies) {}
+  rpc MakeSolarSystemPrediction (MyState) returns (AllBodies) {}
 
   rpc RequestSolarSystemStats(BodyName) returns (SolarSystemStats){}
 
@@ -38,6 +38,12 @@ message BodyPos {
 
 message AllBodies {
     map<string, BodyPos> Bodies = 1;
+}
+
+message MyState {
+  AllBodies otherbodies = 1;
+  string myname = 2;
+  
 }
 
 

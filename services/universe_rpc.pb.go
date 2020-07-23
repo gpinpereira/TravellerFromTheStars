@@ -251,6 +251,61 @@ func (x *AllBodies) GetBodies() map[string]*BodyPos {
 	return nil
 }
 
+type MyState struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Otherbodies *AllBodies `protobuf:"bytes,1,opt,name=otherbodies,proto3" json:"otherbodies,omitempty"`
+	Myname      string     `protobuf:"bytes,2,opt,name=myname,proto3" json:"myname,omitempty"`
+}
+
+func (x *MyState) Reset() {
+	*x = MyState{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_universe_rpc_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MyState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MyState) ProtoMessage() {}
+
+func (x *MyState) ProtoReflect() protoreflect.Message {
+	mi := &file_universe_rpc_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MyState.ProtoReflect.Descriptor instead.
+func (*MyState) Descriptor() ([]byte, []int) {
+	return file_universe_rpc_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *MyState) GetOtherbodies() *AllBodies {
+	if x != nil {
+		return x.Otherbodies
+	}
+	return nil
+}
+
+func (x *MyState) GetMyname() string {
+	if x != nil {
+		return x.Myname
+	}
+	return ""
+}
+
 type NoInput struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -260,7 +315,7 @@ type NoInput struct {
 func (x *NoInput) Reset() {
 	*x = NoInput{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_universe_rpc_proto_msgTypes[4]
+		mi := &file_universe_rpc_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -273,7 +328,7 @@ func (x *NoInput) String() string {
 func (*NoInput) ProtoMessage() {}
 
 func (x *NoInput) ProtoReflect() protoreflect.Message {
-	mi := &file_universe_rpc_proto_msgTypes[4]
+	mi := &file_universe_rpc_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -286,7 +341,7 @@ func (x *NoInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NoInput.ProtoReflect.Descriptor instead.
 func (*NoInput) Descriptor() ([]byte, []int) {
-	return file_universe_rpc_proto_rawDescGZIP(), []int{4}
+	return file_universe_rpc_proto_rawDescGZIP(), []int{5}
 }
 
 var File_universe_rpc_proto protoreflect.FileDescriptor
@@ -311,17 +366,22 @@ var file_universe_rpc_proto_rawDesc = []byte{
 	0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x03, 0x6b, 0x65, 0x79, 0x12, 0x1e, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20,
 	0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x42, 0x6f, 0x64, 0x79, 0x50, 0x6f, 0x73, 0x52, 0x05, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x09, 0x0a, 0x07, 0x4e, 0x6f, 0x49, 0x6e,
-	0x70, 0x75, 0x74, 0x32, 0xd5, 0x01, 0x0a, 0x07, 0x47, 0x72, 0x65, 0x65, 0x74, 0x65, 0x72, 0x12,
-	0x28, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x42, 0x6f, 0x64, 0x79, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69,
-	0x6f, 0x6e, 0x12, 0x09, 0x2e, 0x42, 0x6f, 0x64, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x1a, 0x08, 0x2e,
-	0x42, 0x6f, 0x64, 0x79, 0x50, 0x6f, 0x73, 0x22, 0x00, 0x12, 0x2f, 0x0a, 0x14, 0x53, 0x6f, 0x6c,
-	0x61, 0x72, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e,
-	0x73, 0x12, 0x09, 0x2e, 0x42, 0x6f, 0x64, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x1a, 0x0a, 0x2e, 0x41,
-	0x6c, 0x6c, 0x42, 0x6f, 0x64, 0x69, 0x65, 0x73, 0x22, 0x00, 0x12, 0x34, 0x0a, 0x19, 0x4d, 0x61,
-	0x6b, 0x65, 0x53, 0x6f, 0x6c, 0x61, 0x72, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x50, 0x72, 0x65,
-	0x64, 0x69, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x09, 0x2e, 0x42, 0x6f, 0x64, 0x79, 0x4e, 0x61,
-	0x6d, 0x65, 0x1a, 0x0a, 0x2e, 0x41, 0x6c, 0x6c, 0x42, 0x6f, 0x64, 0x69, 0x65, 0x73, 0x22, 0x00,
+	0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x4f, 0x0a, 0x07, 0x4d, 0x79, 0x53, 0x74,
+	0x61, 0x74, 0x65, 0x12, 0x2c, 0x0a, 0x0b, 0x6f, 0x74, 0x68, 0x65, 0x72, 0x62, 0x6f, 0x64, 0x69,
+	0x65, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x41, 0x6c, 0x6c, 0x42, 0x6f,
+	0x64, 0x69, 0x65, 0x73, 0x52, 0x0b, 0x6f, 0x74, 0x68, 0x65, 0x72, 0x62, 0x6f, 0x64, 0x69, 0x65,
+	0x73, 0x12, 0x16, 0x0a, 0x06, 0x6d, 0x79, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x6d, 0x79, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x09, 0x0a, 0x07, 0x4e, 0x6f, 0x49,
+	0x6e, 0x70, 0x75, 0x74, 0x32, 0xd4, 0x01, 0x0a, 0x07, 0x47, 0x72, 0x65, 0x65, 0x74, 0x65, 0x72,
+	0x12, 0x28, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x42, 0x6f, 0x64, 0x79, 0x50, 0x6f, 0x73, 0x69, 0x74,
+	0x69, 0x6f, 0x6e, 0x12, 0x09, 0x2e, 0x42, 0x6f, 0x64, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x1a, 0x08,
+	0x2e, 0x42, 0x6f, 0x64, 0x79, 0x50, 0x6f, 0x73, 0x22, 0x00, 0x12, 0x2f, 0x0a, 0x14, 0x53, 0x6f,
+	0x6c, 0x61, 0x72, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f,
+	0x6e, 0x73, 0x12, 0x09, 0x2e, 0x42, 0x6f, 0x64, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x1a, 0x0a, 0x2e,
+	0x41, 0x6c, 0x6c, 0x42, 0x6f, 0x64, 0x69, 0x65, 0x73, 0x22, 0x00, 0x12, 0x33, 0x0a, 0x19, 0x4d,
+	0x61, 0x6b, 0x65, 0x53, 0x6f, 0x6c, 0x61, 0x72, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x50, 0x72,
+	0x65, 0x64, 0x69, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x08, 0x2e, 0x4d, 0x79, 0x53, 0x74, 0x61,
+	0x74, 0x65, 0x1a, 0x0a, 0x2e, 0x41, 0x6c, 0x6c, 0x42, 0x6f, 0x64, 0x69, 0x65, 0x73, 0x22, 0x00,
 	0x12, 0x39, 0x0a, 0x17, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x53, 0x6f, 0x6c, 0x61, 0x72,
 	0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x73, 0x12, 0x09, 0x2e, 0x42, 0x6f,
 	0x64, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x1a, 0x11, 0x2e, 0x53, 0x6f, 0x6c, 0x61, 0x72, 0x53, 0x79,
@@ -342,31 +402,33 @@ func file_universe_rpc_proto_rawDescGZIP() []byte {
 	return file_universe_rpc_proto_rawDescData
 }
 
-var file_universe_rpc_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_universe_rpc_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_universe_rpc_proto_goTypes = []interface{}{
 	(*SolarSystemStats)(nil), // 0: SolarSystemStats
 	(*BodyName)(nil),         // 1: BodyName
 	(*BodyPos)(nil),          // 2: BodyPos
 	(*AllBodies)(nil),        // 3: AllBodies
-	(*NoInput)(nil),          // 4: NoInput
-	nil,                      // 5: AllBodies.BodiesEntry
+	(*MyState)(nil),          // 4: MyState
+	(*NoInput)(nil),          // 5: NoInput
+	nil,                      // 6: AllBodies.BodiesEntry
 }
 var file_universe_rpc_proto_depIdxs = []int32{
-	5, // 0: AllBodies.Bodies:type_name -> AllBodies.BodiesEntry
-	2, // 1: AllBodies.BodiesEntry.value:type_name -> BodyPos
-	1, // 2: Greeter.GetBodyPosition:input_type -> BodyName
-	1, // 3: Greeter.SolarSystemPositions:input_type -> BodyName
-	1, // 4: Greeter.MakeSolarSystemPrediction:input_type -> BodyName
-	1, // 5: Greeter.RequestSolarSystemStats:input_type -> BodyName
-	2, // 6: Greeter.GetBodyPosition:output_type -> BodyPos
-	3, // 7: Greeter.SolarSystemPositions:output_type -> AllBodies
-	3, // 8: Greeter.MakeSolarSystemPrediction:output_type -> AllBodies
-	0, // 9: Greeter.RequestSolarSystemStats:output_type -> SolarSystemStats
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	6, // 0: AllBodies.Bodies:type_name -> AllBodies.BodiesEntry
+	3, // 1: MyState.otherbodies:type_name -> AllBodies
+	2, // 2: AllBodies.BodiesEntry.value:type_name -> BodyPos
+	1, // 3: Greeter.GetBodyPosition:input_type -> BodyName
+	1, // 4: Greeter.SolarSystemPositions:input_type -> BodyName
+	4, // 5: Greeter.MakeSolarSystemPrediction:input_type -> MyState
+	1, // 6: Greeter.RequestSolarSystemStats:input_type -> BodyName
+	2, // 7: Greeter.GetBodyPosition:output_type -> BodyPos
+	3, // 8: Greeter.SolarSystemPositions:output_type -> AllBodies
+	3, // 9: Greeter.MakeSolarSystemPrediction:output_type -> AllBodies
+	0, // 10: Greeter.RequestSolarSystemStats:output_type -> SolarSystemStats
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_universe_rpc_proto_init() }
@@ -424,6 +486,18 @@ func file_universe_rpc_proto_init() {
 			}
 		}
 		file_universe_rpc_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MyState); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_universe_rpc_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*NoInput); i {
 			case 0:
 				return &v.state
@@ -442,7 +516,7 @@ func file_universe_rpc_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_universe_rpc_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -473,7 +547,7 @@ type GreeterClient interface {
 	// Sends another greeting
 	GetBodyPosition(ctx context.Context, in *BodyName, opts ...grpc.CallOption) (*BodyPos, error)
 	SolarSystemPositions(ctx context.Context, in *BodyName, opts ...grpc.CallOption) (*AllBodies, error)
-	MakeSolarSystemPrediction(ctx context.Context, in *BodyName, opts ...grpc.CallOption) (*AllBodies, error)
+	MakeSolarSystemPrediction(ctx context.Context, in *MyState, opts ...grpc.CallOption) (*AllBodies, error)
 	RequestSolarSystemStats(ctx context.Context, in *BodyName, opts ...grpc.CallOption) (*SolarSystemStats, error)
 }
 
@@ -503,7 +577,7 @@ func (c *greeterClient) SolarSystemPositions(ctx context.Context, in *BodyName, 
 	return out, nil
 }
 
-func (c *greeterClient) MakeSolarSystemPrediction(ctx context.Context, in *BodyName, opts ...grpc.CallOption) (*AllBodies, error) {
+func (c *greeterClient) MakeSolarSystemPrediction(ctx context.Context, in *MyState, opts ...grpc.CallOption) (*AllBodies, error) {
 	out := new(AllBodies)
 	err := c.cc.Invoke(ctx, "/Greeter/MakeSolarSystemPrediction", in, out, opts...)
 	if err != nil {
@@ -528,7 +602,7 @@ type GreeterServer interface {
 	// Sends another greeting
 	GetBodyPosition(context.Context, *BodyName) (*BodyPos, error)
 	SolarSystemPositions(context.Context, *BodyName) (*AllBodies, error)
-	MakeSolarSystemPrediction(context.Context, *BodyName) (*AllBodies, error)
+	MakeSolarSystemPrediction(context.Context, *MyState) (*AllBodies, error)
 	RequestSolarSystemStats(context.Context, *BodyName) (*SolarSystemStats, error)
 }
 
@@ -542,7 +616,7 @@ func (*UnimplementedGreeterServer) GetBodyPosition(context.Context, *BodyName) (
 func (*UnimplementedGreeterServer) SolarSystemPositions(context.Context, *BodyName) (*AllBodies, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SolarSystemPositions not implemented")
 }
-func (*UnimplementedGreeterServer) MakeSolarSystemPrediction(context.Context, *BodyName) (*AllBodies, error) {
+func (*UnimplementedGreeterServer) MakeSolarSystemPrediction(context.Context, *MyState) (*AllBodies, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MakeSolarSystemPrediction not implemented")
 }
 func (*UnimplementedGreeterServer) RequestSolarSystemStats(context.Context, *BodyName) (*SolarSystemStats, error) {
@@ -590,7 +664,7 @@ func _Greeter_SolarSystemPositions_Handler(srv interface{}, ctx context.Context,
 }
 
 func _Greeter_MakeSolarSystemPrediction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BodyName)
+	in := new(MyState)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -602,7 +676,7 @@ func _Greeter_MakeSolarSystemPrediction_Handler(srv interface{}, ctx context.Con
 		FullMethod: "/Greeter/MakeSolarSystemPrediction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).MakeSolarSystemPrediction(ctx, req.(*BodyName))
+		return srv.(GreeterServer).MakeSolarSystemPrediction(ctx, req.(*MyState))
 	}
 	return interceptor(ctx, in, info, handler)
 }

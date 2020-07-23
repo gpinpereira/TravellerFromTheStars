@@ -1,6 +1,7 @@
 package universe
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io"
 	"log"
@@ -9,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"encoding/csv"
+	pb "../services"
 )
 
 //import "fmt"
@@ -297,35 +298,43 @@ func SimulateSystem(system *SolarSystem) {
 
 }
 
-func FastSimulation(system *SolarSystem, ship_name string) ([]float64, []float64) {
+func FastSimulation(in *pb.MyState) ([]float64, []float64) {
 
-	s := SolarSystem{Name: "Solar System", Age: 0, deltat: 500}
-
-	delta := 3600
-	limit := 3600 * 24 * 365
 	var x_hist []float64
 	var y_hist []float64
-	age := 0
-	this_system_bodies := system.bodies
 
-	new_system := make(map[string]*Astro)
+	allbodies := in.Otherbodies.Bodies
 
-	for n, body := range this_system_bodies {
-		fmt.Println(body.Name)
-		var n_body Astro
-		n_body = *body
-		n_body.system = s
-		n_body.x = 0
-		new_system[n] = &n_body
+	dt := 1800.0
+	system := SolarSystem{Name: "Solar System", Age: 0, deltat: dt}
+	bodies := make(map[string]*Astro)
+
+	fmt.Println("starting fast simulation")
+
+	for name, body := range allbodies {
+
+		the_sun := false
+		if name == "Sun" {
+			the_sun = true
+		}
+		bod := Astro{Name: name, Age: 0, x: body.X, y: body.Y, vx: body.Vx, vy: body.Vy, mass: body.Mass, is_sun: the_sun, is_ship: false, center_body: "Sun"}
+		bod.system = system
+		bodies[name] = &bod
+		//send_bodies[name] = &pb.BodyPos{X:, Y: body.X, Vx: body.Vx, Vy: body.Vy, Mass: body.mass}
 
 	}
 
-	s.bodies = new_system
+	system.bodies = bodies
 
-	fmt.Println("starting fast simulation")
-	for age < limit {
+	this_system_bodies := system.bodies
+	limit := 3600.0 * 24 * 365
 
-		for _, body := range new_system {
+	t := 0.0
+	fmt.Println(t)
+	for t < limit {
+		//if start
+		fmt.Println(t)
+		for _, body := range this_system_bodies {
 
 			if !body.is_sun {
 				//fmt.Println(body)
@@ -333,25 +342,22 @@ func FastSimulation(system *SolarSystem, ship_name string) ([]float64, []float64
 			}
 		}
 
-		for _, body := range new_system {
+		for _, body := range this_system_bodies {
 
 			if !body.is_sun {
-				//fmt.Println(body.Name)
+				//fmt.Println(body)
 				takeNextStep(body)
-
-				if body.Name == ship_name {
-					//fmt.Println(body)
-					x_hist = append(x_hist, body.x)
-					y_hist = append(y_hist, body.y)
-				}
 			}
 		}
-		age += delta
+
+		system.Age = system.Age + system.deltat
+		t += dt
+
 	}
 
-	fmt.Println("fast simulation ended")
-	//fmt.Println(age)
-	//fmt.Println(x_hist)
+	fmt.Println(t)
+	fmt.Println("end fast simulation")
+
 	return x_hist, y_hist
 
 }
