@@ -298,14 +298,14 @@ func SimulateSystem(system *SolarSystem) {
 
 }
 
-func FastSimulation(in *pb.MyState) ([]float64, []float64) {
+func FastSimulation(in *pb.MyState) *pb.PositionsList {
 
 	var x_hist []float64
 	var y_hist []float64
 
 	allbodies := in.Otherbodies.Bodies
 
-	dt := 1800.0
+	dt := 3600.0 / 3
 	system := SolarSystem{Name: "Solar System", Age: 0, deltat: dt}
 	bodies := make(map[string]*Astro)
 
@@ -320,45 +320,89 @@ func FastSimulation(in *pb.MyState) ([]float64, []float64) {
 		bod := Astro{Name: name, Age: 0, x: body.X, y: body.Y, vx: body.Vx, vy: body.Vy, mass: body.Mass, is_sun: the_sun, is_ship: false, center_body: "Sun"}
 		bod.system = system
 		bodies[name] = &bod
-		//send_bodies[name] = &pb.BodyPos{X:, Y: body.X, Vx: body.Vx, Vy: body.Vy, Mass: body.mass}
 
 	}
 
 	system.bodies = bodies
 
+	for i := range system.bodies {
+
+		fmt.Println(system.bodies[i].Name)
+		system.bodies[i].system = system
+	}
+
 	this_system_bodies := system.bodies
 	limit := 3600.0 * 24 * 365
 
 	t := 0.0
+	i := 0
 	fmt.Println(t)
+
+	ship_current_x := 0.0
+	ship_current_y := 0.0
+	current_mymass := 0.0
+	//distance := 1 * math.Pow10(99)
 	for t < limit {
 		//if start
-		fmt.Println(t)
+		//fmt.Println(t)
 		for _, body := range this_system_bodies {
 
 			if !body.is_sun {
 				//fmt.Println(body)
 				moveAstro(body)
 			}
-		}
 
-		for _, body := range this_system_bodies {
+			if body.Name == in.Myname {
+				ship_current_x = body.next_x
+				ship_current_y = body.next_y
+				current_mymass = body.mass
+			}
+		}
+		min_dist_factor := 100.0
+		for name, body := range this_system_bodies {
 
 			if !body.is_sun {
 				//fmt.Println(body)
 				takeNextStep(body)
 			}
+			if name == in.Myname {
+				//fmt.Println(body.x, body.y)
+				//fmt.Println()
+				x_hist = append(x_hist, body.x)
+				y_hist = append(y_hist, body.y)
+
+			}
+
+			if name != in.Myname && name != "Sun" {
+				//fmt.Println(name)
+				dist := math.Sqrt(math.Pow((body.x-ship_current_x), 2) + math.Pow((body.y-ship_current_y), 2))
+				factor := dist * math.Pow(current_mymass/body.mass, 0.4) //body.mass / (current_mymass * math.Pow10(10))
+				//fmt.Println(factor)
+
+				if factor < min_dist_factor {
+					min_dist_factor = factor
+				}
+
+			}
+		}
+
+		if min_dist_factor < 5.0 {
+			system.deltat = 60.0 * 10.0
+		} else {
+			system.deltat = dt
 		}
 
 		system.Age = system.Age + system.deltat
 		t += dt
+		i += 1
 
 	}
 
 	fmt.Println(t)
+	fmt.Println(i)
 	fmt.Println("end fast simulation")
 
-	return x_hist, y_hist
+	return &pb.PositionsList{X: x_hist, Y: y_hist}
 
 }
 

@@ -10,7 +10,7 @@ service Greeter {
 
   rpc SolarSystemPositions (BodyName) returns (AllBodies) {}
   
-  rpc MakeSolarSystemPrediction (MyState) returns (AllBodies) {}
+  rpc MakeSolarSystemPrediction (MyState) returns (PositionsList) {}
 
   rpc RequestSolarSystemStats(BodyName) returns (SolarSystemStats){}
 
@@ -46,5 +46,9 @@ message MyState {
   
 }
 
+message PositionsList {
+  repeated double x = 1;
+  repeated double y = 2;
+}
 
 message NoInput{}

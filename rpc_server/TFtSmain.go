@@ -66,7 +66,7 @@ func (s *server) SolarSystemPositions(ctx context.Context, in *pb.BodyName) (*pb
 	return &pb.AllBodies{Bodies: send_bodies}, nil
 }
 
-func (s *server) MakeSolarSystemPrediction(ctx context.Context, in *pb.MyState) (*pb.AllBodies, error) {
+func (s *server) MakeSolarSystemPrediction(ctx context.Context, in *pb.MyState) (*pb.PositionsList, error) {
 
 	fmt.Println(in.Myname)
 	//fmt.Println(allbodies)
@@ -78,9 +78,9 @@ func (s *server) MakeSolarSystemPrediction(ctx context.Context, in *pb.MyState) 
 
 	//allbodies := main_solar_system.GetBodies()
 
-	hist_x, hist_y := universe.FastSimulation(in)
-	fmt.Println(hist_x)
-	fmt.Println(hist_y)
+	sim_res := universe.FastSimulation(in)
+	//fmt.Println(sim_res)
+	//fmt.Println(hist_y)
 
 	/*send_bodies := make(map[string]*pb.BodyPos)
 	bodies := make(map[string]universe.Astro)
@@ -91,7 +91,8 @@ func (s *server) MakeSolarSystemPrediction(ctx context.Context, in *pb.MyState) 
 	}*/
 
 	//return &pb.AllBodies{Bodies: send_bodies}, nil
-	return in.Otherbodies, nil
+	//return in.Otherbodies, nil
+	return sim_res, nil
 }
 
 func (s *server) RequestSolarSystemStats(ctx context.Context, in *pb.BodyName) (*pb.SolarSystemStats, error) {
